@@ -8,44 +8,36 @@ import axios from "axios";
 export default function Home() {
   const [todos, setTodos] = useState([]);
 
-  // useEffect(() => {
-  //   const result = axios.get("http://localhost:1337/api/todos");
-  //   setTodos(result.data.data);
-  //   console.log(result.data.data)
-  // }, []);
+
 
   useEffect(() => {
-    axios.get("http://43.204.219.196/api/todos").then(res => {
+    axios.get("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos",{
+      headers: {
+        Authorization:
+          'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
+      }
+    }).then(res => {
       setTodos(res?.data.data);
       console.log(res?.data.data);
     })
-    // console.log(result);
-    // 
     return
   }, []);
 
   const addTodo = async (text) => {
     console.log(text)
-
-
-    // const res = await fetch('http://localhost:1337/api/todos', {
-    //   method: 'post',
-    //   body: {
-
-    //     "data": {
-    //       "text": text
-    //     }
-
-    //   }
-    // })
-
-
-    // console.log(res)
     if (text && text.length > 0) {
-      const result = await axios.post("http://43.204.219.196/api/todos", {
-        data: {
-          text
-        }
+      const result = await axios.post("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos", {
+
+          data: {
+            text
+          }
+        },{
+          headers: {
+            Authorization:
+              'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
+          }
+        
+      
       });
        setTodos([...todos, result.data.data]);
     }
@@ -55,7 +47,12 @@ export default function Home() {
 
   const deleteTodoItem = async (todo) => {
     if (confirm("Do you really want to delete this item?")) {
-      await axios.delete("http://43.204.219.196/api/todos/" + todo.id);
+      await axios.delete("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos/" + todo.id,{
+        headers: {
+          Authorization:
+            'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
+        }
+      });
       const newTodos = todos.filter((_todo) => _todo.id !== todo.id);
       console.log(newTodos);
       setTodos(newTodos);
@@ -65,9 +62,14 @@ export default function Home() {
   const editTodoItem = async (todo) => {
     const newTodoText = prompt("Enter new todo text or description:");
     if (newTodoText != null) {
-      const result = await axios.put("http://43.204.219.196/api/todos/" + todo.id, {
+      const result = await axios.put("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos/" + todo.id, {
         data: {
           text: newTodoText
+        }
+      },{
+        headers: {
+          Authorization:
+            'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
         }
       });
       const moddedTodos = todos.map((_todo) => {

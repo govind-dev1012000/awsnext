@@ -1,0 +1,7 @@
+applications:
+- name: nextappaws
+  route: random
+  memory: 128M
+  # path: /.next
+  # buildpack: staticfile_buildpack
+  buildpack: nodejs_buildpack
