@@ -12,7 +12,11 @@ export default function Home() {
   const [todos, setTodos] = useState([]);
 
   var token = useSession()
-  if (token.status== "authenticated") {
+
+  const [path,setPath]=useState(true)
+
+  if (token.status== "authenticated" && path) {
+    setPath(false)
     axios.get("http://13.127.243.26/api/todos",{
       headers: {
         Authorization:
