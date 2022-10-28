@@ -4,24 +4,54 @@ import Header from "../components/header";
 import AddTodo from "../containers/addTodo";
 import TodoList from "../containers/todoList";
 import axios from "axios";
+import { getSession ,useSession, signIn, signOut } from "next-auth/react";
+import jwt_decode from "jwt-decode";
+import Cookies from 'js-cookie'
 
 export default function Home() {
   const [todos, setTodos] = useState([]);
 
-
-
-  useEffect(() => {
+  var token = useSession()
+  if (token.status== "authenticated") {
     axios.get("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos",{
       headers: {
         Authorization:
-          'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
+          `Bearer ${token.data.jwt}`,
       }
     }).then(res => {
       setTodos(res?.data.data);
-      console.log(res?.data.data);
+      // console.log(res?.data.data);
     })
-    return
-  }, []);
+  }
+  // console.log(token.status)
+  // Cookies.set('auth','hi')
+  // var t = Cookies.get('next-auth.csrf-token')
+  // // var decoded = jwt_decode(t);
+  // console.log(t)
+  // console.log(decoded)
+
+
+//  const [a]=useState(
+//   useSession()
+// )
+
+  // useEffect(()=>{
+  //   var use = await useSession();
+  //   console.log(use);
+  // },[])
+
+  // useEffect(() => {
+  //   axios.get("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos",{
+  //     headers: {
+  //       Authorization:
+  //         `Bearer ${token.data.jwt}`,
+  //     }
+  //   }).then(res => {
+  //     setTodos(res?.data.data);
+  //     console.log(res?.data.data);
+  //   })
+  //   return
+  // }, []);
 
   const addTodo = async (text) => {
     console.log(text)
@@ -31,14 +61,14 @@ export default function Home() {
           data: {
             text
           }
-        },{
+        },
+        {
           headers: {
             Authorization:
-              'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
+            `Bearer ${token.data.jwt}`,
           }
-        
-      
-      });
+      }
+      );
        setTodos([...todos, result.data.data]);
     }
 
@@ -50,9 +80,10 @@ export default function Home() {
       await axios.delete("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos/" + todo.id,{
         headers: {
           Authorization:
-            'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
+          `Bearer ${token.data.jwt}`,
         }
-      });
+      }
+      );
       const newTodos = todos.filter((_todo) => _todo.id !== todo.id);
       console.log(newTodos);
       setTodos(newTodos);
@@ -66,12 +97,14 @@ export default function Home() {
         data: {
           text: newTodoText
         }
-      },{
+      },
+      {
         headers: {
           Authorization:
-            'Bearer 033c12370b4a91f531ef64eb63d897e8e469dac69b4c61ed2c287e1fbc55accfb52b06a41573ce9ddf502ed527caab6bead4529aafc70ca4a406036f65a5a6f8a46195230b859f4d13241f18cd12b1c3b91a1fd7b426290f74a5536f1d8e309c7ce3c56e1722d9a0e976f51de50d622859642cbb41a6a582b36d0038b34dcdb1',
+          `Bearer ${token.data.jwt}`,
         }
-      });
+      }
+      );
       const moddedTodos = todos.map((_todo) => {
         if (_todo.id === todo.id) {
           return result.data.data;
@@ -101,3 +134,24 @@ export default function Home() {
     </div>
   );
 }
+
+// import { useSession, signIn, signOut } from "next-auth/react"
+
+// export default function Home() {
+//   const { data: session } = useSession();
+//   console.log(session)
+//   if (session) {
+//     return (
+//       <div>
+//         Welcome user<br />
+//         <button onClick={() => signOut()}>Sign out</button>
+//       </div>
+//     );
+//   }
+//   return (
+//     <div>
+//       Click to sign into your user account <br />
+//       <button onClick={() => signIn()}>Sign in</button>
+//     </div>
+//   );
+// }
