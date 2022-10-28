@@ -13,7 +13,7 @@ export default function Home() {
 
   var token = useSession()
   if (token.status== "authenticated") {
-    axios.get("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos",{
+    axios.get("http://13.127.243.26/api/todos",{
       headers: {
         Authorization:
           `Bearer ${token.data.jwt}`,
@@ -56,7 +56,7 @@ export default function Home() {
   const addTodo = async (text) => {
     console.log(text)
     if (text && text.length > 0) {
-      const result = await axios.post("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos", {
+      const result = await axios.post("http://13.127.243.26/api/todos", {
 
           data: {
             text
@@ -77,7 +77,7 @@ export default function Home() {
 
   const deleteTodoItem = async (todo) => {
     if (confirm("Do you really want to delete this item?")) {
-      await axios.delete("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos/" + todo.id,{
+      await axios.delete("http://13.127.243.26/api/todos/" + todo.id,{
         headers: {
           Authorization:
           `Bearer ${token.data.jwt}`,
@@ -93,7 +93,7 @@ export default function Home() {
   const editTodoItem = async (todo) => {
     const newTodoText = prompt("Enter new todo text or description:");
     if (newTodoText != null) {
-      const result = await axios.put("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/todos/" + todo.id, {
+      const result = await axios.put("http://13.127.243.26/api/todos/" + todo.id, {
         data: {
           text: newTodoText
         }

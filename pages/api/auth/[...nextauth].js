@@ -16,7 +16,7 @@ export default NextAuth({
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials, req) {
-                const res = await fetch("https://5s97615slj.execute-api.ap-south-1.amazonaws.com/api/auth/local", {
+                const res = await fetch("http://13.127.243.26/api/auth/local", {
                     method: 'POST',
                     body: JSON.stringify(credentials),
                     headers: { "Content-Type": "application/json" }
